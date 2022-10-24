@@ -14,15 +14,29 @@ jobs:
           with:
             creds: ${{ secrets.AZURE_CREDENTIALS }}
         
-        - name: 'Build and push image'
-          uses: azure/docker-login@v1
+#        - name: 'Build and push image'
+#          uses: azure/docker-login@v1
+#          with:
+#            login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+#            username: ${{ secrets.REGISTRY_USERNAME }}
+#            password: ${{ secrets.REGISTRY_PASSWORD }}
+#        - run: |
+#            docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:${{ github.sha }}
+#            docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:${{ github.sha }}
+
+        # taken from: https://github.com/devcontainers/ci/blob/main/docs/github-action.md
+        - name: Build and run dev container task
+          uses: devcontainers/ci@v0.2
           with:
-            login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-            username: ${{ secrets.REGISTRY_USERNAME }}
-            password: ${{ secrets.REGISTRY_PASSWORD }}
-        - run: |
-            docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:${{ github.sha }}
-            docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:${{ github.sha }}
+            # Change this to point to your image name
+            imageName: ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:${{ github.sha }}
+            # Set to subfolder (looping through folders??)
+            subFolder: default
+            # Change this to be your CI task/script
+            runCmd: |
+              # Add multiple commands to run if needed
+              make install-packages
+              make ci-build
 
         - name: 'Deploy to Azure Container Instances'
           uses: 'azure/aci-deploy@v1'
