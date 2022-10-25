@@ -29,8 +29,7 @@ jobs:
           uses: devcontainers/ci@v0.2
           with:
             # Change this to point to your image name
-            # imageName: ${{ secrets.REGISTRY_LOGIN_SERVER }}/vscode-default
-            imageName: vscodedevcontainers.azurecr.io/vscode-default
+            imageName: ${{ secrets.REGISTRY_LOGIN_SERVER }}/vscode-default
             imageTag: ${{ github.sha }}
             # Set to subfolder (looping through folders??)
             subFolder: default
@@ -46,8 +45,8 @@ jobs:
           with:
             resource-group: ${{ secrets.RESOURCE_GROUP }}
             dns-name-label: ${{ secrets.RESOURCE_GROUP }}${{ github.run_number }}
-            image: vscodedevcontainers.azurecr.io/vscode-default:${{ github.sha }}
-            # registry-login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+            image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/vscode-default:${{ github.sha }}
+            registry-login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
             registry-username: ${{ secrets.REGISTRY_USERNAME }}
             registry-password: ${{ secrets.REGISTRY_PASSWORD }}
             name: vscode-default
